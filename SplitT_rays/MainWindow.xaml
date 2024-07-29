@@ -1,0 +1,248 @@
+﻿<Window x:Class="Split_Trays.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Split_Trays"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+       mc:Ignorable="d" Title="Split Trays" Foreground="White"  WindowStartupLocation="CenterScreen" StateChanged="Window_StateChanged" WindowState="Maximized" Height="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}}" Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}}">
+    <Window.Resources>
+        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="DataGridCell">
+            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+    <Viewbox Stretch="Fill" StretchDirection="Both">
+        <Grid>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Background="#A7C0CF" Height="120">
+                    <Image Source="/Resources/logo.png" Width="118" Height="55" Margin="10,30,0,41" />
+                    <Label x:Name="Header" Content="Split Trays" Margin="730,0,0,0" Width="Auto" Foreground="White" VerticalContentAlignment="Center" FontSize="48"/>
+                    <Button Margin="740,0,10,0" Width="70" Height="70"  ToolTip="Exit" Click="Exit_Click" BorderBrush="{x:Null}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="/Resources/exit.png" Stretch="Fill"/>
+                        </Button.Background>
+                    </Button>
+                </StackPanel>
+                <TabControl x:Name="MyTab" FontSize="16" Background="#FFE2E1E1" SelectionChanged="TabControl_SelectionChanged">
+                    <TabItem Header="Split Trays">
+                        <StackPanel Orientation="Vertical" Height="900">
+                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                                <Label Content="WH:" FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center"  Margin="50,0,0,0"/>
+                                <TextBox x:Name="WHTxt" Width="200" Margin="10,0,0,0" Text="" KeyDown="WH_KeyDown" BorderThickness="1" HorizontalContentAlignment="Center" FontSize="20" Background="White"/>
+                                <Button x:Name="StartBtn" Margin="20,0,0,0" Content="Go" Style="{StaticResource MaterialDesignFloatingActionLightButton}" ToolTip="Go" Background="#FF6887DC" BorderBrush="#FF6887DC" Click="StartBtn_Click"  Height="33" Width="31" FontWeight="Bold" VerticalContentAlignment="Center"/>
+                                <StackPanel x:Name="MenuItems" Margin="80,0,0,0" Visibility="Hidden" Orientation="Horizontal">
+                                    <Label Content="PL No:" FontSize="20" FontWeight="Bold"  Margin="80,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="PLTxt" Content="" Width="100" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Total Skids:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="TotalSkidsTxt" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Total Splits:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="Total_SplitsTxt" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Total Shortages:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="Total_Shortages" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Full Traceability:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="TraceTxt" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0"/>
+                            <ProgressBar x:Name="PBar" Visibility="Collapsed" Margin="0,100,0,0" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Height="100" Width="100"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                                <DataGrid x:Name="Grid1" Visibility="Hidden" SelectionUnit="FullRow" ItemsSource="{Binding}" Margin="20,0,0,0" HorizontalAlignment="Left" RowHeight="30" CanUserSortColumns="False" CanUserAddRows="False" AutoGenerateColumns="False"  Height="760" FontSize="18" VirtualizingPanel.IsVirtualizing="False" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" GridLinesVisibility="All" Width="1450" FontWeight="Bold" SelectionChanged="Grid1_SelectionChanged">
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="{Binding RowColor}"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGrid.RowStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Item" Binding="{Binding Item}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Size" Binding="{Binding Size}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Lot" Binding="{Binding Lot}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Kit Demand" Binding="{Binding KitDemand}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Qty" Binding="{Binding Qty}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Remarks" Binding="{Binding Remarks}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Excess" Binding="{Binding Excess}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Line Demand" Visibility="Hidden" Binding="{Binding LineDemand}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Date Code" Binding="{Binding DateCode}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Tray Qty" Binding="{Binding TrayQty}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Tray Name" Binding="{Binding Tray}" Width="280" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Location" Binding="{Binding Location}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="PBR Demand" Binding="{Binding Description}" Width="*" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <GroupBox x:Name="StickBox" Visibility="Hidden" Style="{DynamicResource MaterialDesignCardGroupBox}" Height="760" Margin="20,0,0,0" Width="390"  HorizontalAlignment="Center" VerticalAlignment="Top" materialDesign:ColorZoneAssist.Mode="Custom" materialDesign:ColorZoneAssist.Foreground="White">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBox x:Name="StickHeader" Width="350" Height="50" Text="" BorderThickness="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="26"/>
+                                        <DataGrid x:Name="GridStick" Visibility="Visible" SelectionUnit="Cell" ItemsSource="{Binding}" Margin="5,10,0,0" HorizontalAlignment="Left" RowHeight="30" CanUserSortColumns="False" CanUserAddRows="False" AutoGenerateColumns="False"  Height="540" FontSize="18" VirtualizingPanel.IsVirtualizing="False" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" GridLinesVisibility="All" Width="355">
+                                            <DataGrid.RowStyle>
+                                                <Style TargetType="DataGridRow">
+                                                    <Setter Property="Background" Value="{Binding RowColor}"/>
+                                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGrid.RowStyle>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Lot" Binding="{Binding Lot}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                                <DataGridTextColumn Header="WH" Binding="{Binding WH}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                                <DataGridTextColumn Header="Qty" Binding="{Binding Qty}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                                <DataGridTextColumn Header="Packaging" Binding="{Binding Packaging}" Width="*" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                        <Label x:Name="Gll_Note" Visibility="Hidden" Content="No Reel Recorded" Margin="0,10,0,0" HorizontalAlignment="Center" Background="LightGoldenrodYellow" FontSize="20"/>
+                                        <Button Height="60" Width="300" Click="SendStickMail_Click" Content="Send Stick Notification" Margin="0,12,0,0" FontSize="24"/>
+                                    </StackPanel>
+                                </GroupBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Merge Trays">
+                        <StackPanel Orientation="Vertical" Height="900">
+                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                                <Label Content="WH:" FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center"  Margin="50,0,0,0"/>
+                                <TextBox x:Name="WHTxt3" Width="200" Margin="10,0,0,0" Text="" KeyDown="WH_KeyDown3" BorderThickness="1" HorizontalContentAlignment="Center" FontSize="20" Background="White"/>
+                                <Button x:Name="StartBtn3" Margin="20,0,0,0" Content="Go" Style="{StaticResource MaterialDesignFloatingActionLightButton}" ToolTip="Go" Background="#FF6887DC" BorderBrush="#FF6887DC" Click="Go_Click3" Height="33" Width="31" FontWeight="Bold" VerticalContentAlignment="Center"/>
+                                <Label Content="PL No:" FontSize="20" FontWeight="Bold"  Margin="80,0,0,0" VerticalContentAlignment="Center"/>
+                                <Label x:Name="PLTxt3" Content="" Width="100" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                <Label Content="Total Skids:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                <Label x:Name="TotalSkidsTxt3" Content="" Width="100" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                <Label Content="Total Optional Merges:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                <Label x:Name="OptionalMrgesTxt3" Content="" Width="100" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                <Label Content="Full Traceability:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                <Label x:Name="TraceTxt3" Content="" Width="100" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                <Label Content="Sort By:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                <Label x:Name="SortByPLTxt3" Content="" Width="150" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                            </StackPanel>
+                            <ProgressBar x:Name="PBar3" Visibility="Collapsed" Margin="0,100,0,0" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Height="100" Width="100"/>
+                            <DataGrid x:Name="Grid3" Visibility="Hidden" SelectionUnit="Cell" ItemsSource="{Binding}" Margin="0,20,0,0" RowHeight="30" CanUserSortColumns="False" CanUserAddRows="False" AutoGenerateColumns="False"  Height="760" FontSize="20" VirtualizingPanel.IsVirtualizing="False" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" GridLinesVisibility="All" Width="1800" FontWeight="Bold">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="{Binding RowColor}"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Merge ID" Binding="{Binding ID}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Item" Binding="{Binding Item}" Width="200" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Size" Binding="{Binding Size}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Lot" Binding="{Binding Lot}" Width="200" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Demand" Binding="{Binding KitDemand}" Width="100" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Qty" Binding="{Binding Qty}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Remark" Binding="{Binding Remarks}" Width="200" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Excess" Binding="{Binding Excess}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Date Code" Binding="{Binding DateCode}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Tray Qty" Binding="{Binding TrayQty}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="MPN" Binding="{Binding MPN}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="M.Lot" Binding="{Binding MLot}" Width="*" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Poly-Cap">
+                        <StackPanel Orientation="Vertical" Height="900">
+                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                                <Label Content="WH:" FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center"  Margin="50,0,0,0"/>
+                                <TextBox x:Name="WHTxt2" Width="200" Margin="10,0,0,0" Text="" KeyDown="WH_KeyDown2" BorderThickness="1" HorizontalContentAlignment="Center" FontSize="20" Background="White"/>
+                                <Button x:Name="StartBtn2" Margin="20,0,0,0" Content="Go" Style="{StaticResource MaterialDesignFloatingActionLightButton}" ToolTip="Go" Background="#FF6887DC" BorderBrush="#FF6887DC" Click="StartBtn_Click2"  Height="33" Width="31" FontWeight="Bold" VerticalContentAlignment="Center"/>
+                                <StackPanel x:Name="MenuItems2" Margin="80,0,0,0" Visibility="Hidden" Orientation="Horizontal">
+                                    <Label Content="PL No:" FontSize="20" FontWeight="Bold"  Margin="80,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="PLTxt2" Content="" Width="100" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Total Skids:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="TotalSkidsTxt2" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Total Splits:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="Total_SplitsTxt2" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Total Shortages:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="Total_Shortages2" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Full Traceability:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="TraceTxt2" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0"/>
+                            <ProgressBar x:Name="PBar2" Visibility="Collapsed" Margin="0,100,0,0" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Height="100" Width="100"/>
+                            <DataGrid x:Name="Grid2" Visibility="Hidden" SelectionUnit="Cell" ItemsSource="{Binding}" Margin="0,20,0,0" RowHeight="30" CanUserSortColumns="False" CanUserAddRows="False" AutoGenerateColumns="False"  Height="760" FontSize="20" VirtualizingPanel.IsVirtualizing="False" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" GridLinesVisibility="All" Width="1800" FontWeight="Bold">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="{Binding RowColor}"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Item" Binding="{Binding Item}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Size" Binding="{Binding Size}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Lot" Binding="{Binding Lot}" Width="250" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Kit Demand" Binding="{Binding KitDemand}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Qty" Binding="{Binding Qty}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Real Excess" Binding="{Binding RealExcess}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="10 Precent Excess" Binding="{Binding Excess}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Remarks" Binding="{Binding Remarks}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Line Demand" Visibility="Visible" Binding="{Binding LineDemand_Poly}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Date Code" Binding="{Binding DateCode}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="MPN" Visibility="Hidden" Binding="{Binding MPN}" Width="300" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="M.Lot" Visibility="Hidden" Binding="{Binding MLot}" Width="300" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    <DataGridTextColumn Header="Customer" Binding="{Binding Customer}" Width="*" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Split Trays PBR">
+                        <StackPanel Orientation="Vertical" Height="900">
+                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                                <Label Content="WH:" FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center"  Margin="50,0,0,0"/>
+                                <TextBox x:Name="WHTxt4" Width="200" Margin="10,0,0,0" Text="" KeyDown="WH_KeyDown" BorderThickness="1" HorizontalContentAlignment="Center" FontSize="20" Background="White"/>
+                                <Button x:Name="StartBtn4" Margin="20,0,0,0" Content="Go" Style="{StaticResource MaterialDesignFloatingActionLightButton}" ToolTip="Go" Background="#FF6887DC" BorderBrush="#FF6887DC" Click="StartBtn_Click"  Height="33" Width="31" FontWeight="Bold" VerticalContentAlignment="Center"/>
+                                <StackPanel x:Name="MenuItems4" Margin="80,0,0,0" Visibility="Hidden" Orientation="Horizontal">
+                                    <Label Content="PL No:" FontSize="20" FontWeight="Bold"  Margin="80,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="PLTxt4" Content="" Width="100" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Total Skids:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="TotalSkidsTxt4" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Total Splits:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="Total_SplitsTxt4" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Total Shortages:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="Total_Shortages4" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                    <Label Content="Full Traceability:" FontSize="20" FontWeight="Bold"  Margin="30,0,0,0" VerticalContentAlignment="Center"/>
+                                    <Label x:Name="TraceTxt4" Content="" Width="80" FontSize="20" FontWeight="Bold"  Margin="10,0,0,0" Foreground="#DDFF3A3A" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0"/>
+                            <ProgressBar x:Name="PBar4" Visibility="Collapsed" Margin="0,100,0,0" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Height="100" Width="100"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                                <DataGrid x:Name="Grid4" Visibility="Visible" SelectionUnit="FullRow" ItemsSource="{Binding}" Margin="20,0,0,0" HorizontalAlignment="Left" RowHeight="30" CanUserSortColumns="False" CanUserAddRows="False" AutoGenerateColumns="False"  Height="760" FontSize="18" VirtualizingPanel.IsVirtualizing="False" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" GridLinesVisibility="All" Width="1850" FontWeight="Bold" SelectionChanged="Grid1_SelectionChanged">
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="{Binding RowColor}"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGrid.RowStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Item" Binding="{Binding Item}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Size" Binding="{Binding Size}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Lot" Binding="{Binding Lot}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Kit Demand" Binding="{Binding KitDemand}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Qty" Binding="{Binding Qty}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Remarks" Binding="{Binding Remarks}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Excess" Binding="{Binding Excess}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Line Demand" Visibility="Hidden" Binding="{Binding LineDemand}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Date Code" Binding="{Binding DateCode}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Tray Qty" Binding="{Binding TrayQty}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Tray Name" Binding="{Binding Tray}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Location" Binding="{Binding Location}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="PBR Demand" Binding="{Binding Description}" Width="Auto" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                        <DataGridTextColumn Header="Last Location" Binding="{Binding Last_Location}" Width="*" IsReadOnly="True"  HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+            </StackPanel>
+        </Grid>
+    </Viewbox>
+</Window>
